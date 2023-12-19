@@ -1,6 +1,12 @@
 from openai import OpenAI
+from datetime import datetime
 import dotenv
 import tiktoken
+
+print(datetime.now())
+
+dotenv.load_dotenv()
+client = OpenAI()
 
 codificador = tiktoken.encoding_for_model('gpt-3.5-turbo')
 
@@ -12,8 +18,6 @@ def carrega(nome_do_arquivo):
     except IOError as e:
         print(f"Erro: {e}")
 
-dotenv.load_dotenv()
-client = OpenAI()
 
 prompt_sistema = """
 Identifique o perfil de compra para cada cliente a seguir.
@@ -24,6 +28,8 @@ cliente - descreva o perfil do cliente em 3 palavras
 """
 
 prompt_usuario = carrega("/home/erick/www/alura/python-chatbotia/ferramentas-api/dados/lista_de_compras_100_clientes.csv")
+
+# print(f'{prompt_usuario}')
 
 lista_de_tokens = codificador.encode(prompt_sistema + prompt_usuario)
 numero_de_tokens = len(lista_de_tokens)
@@ -59,3 +65,5 @@ resposta = client.chat.completions.create(
 )
 
 print(resposta.choices[0].message.content)
+
+print(datetime.now())
